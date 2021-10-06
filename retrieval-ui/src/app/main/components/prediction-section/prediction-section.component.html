@@ -1,0 +1,54 @@
+<div *ngIf="predictedLandmarks" class="input-container">
+  <mat-card>
+    <mat-card-content>
+      <div class="input-container-content">
+        <img [src]="inputImage" alt="Input Image" class="input-image">
+        <div class="input-info">
+          <p class="input-container-title">Target image</p>
+          <div *ngIf="showDetections && inputDetection.length > 0" class="input_detections">
+            <p>The landmark from your image has been detected as:</p>
+            <p *ngFor="let detection of inputDetection">{{detection.name}},
+              score: {{(detection.score | number : '1.2-2') || "-" }}%
+            </p>
+          </div>
+          <p>Below you can find the best three predictions along with their probabilities.</p>
+          <p>How pleased are you with the result? Rate the results from 0 to 10.</p>
+          <bar-rating [(rate)]="rate" [max]="10" [theme]="'square'"></bar-rating>
+          <button (click)="onRatingAdd()" [disabled]="!canRate" color="primary" mat-raised-button>Submit rating</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div #prediction *ngIf="predictedLandmarks" class="response-container">
+  <mat-card (click)="openDialog(i, landmark)" *ngFor="let landmark of predictedLandmarks; let i=index;"
+            class="prediction-card">
+    <mat-card-title>
+      Prediction {{i + 1}} ({{landmark.label}})
+    </mat-card-title>
+    <mat-card-subtitle>
+      Probability: {{landmark.probability}}%
+    </mat-card-subtitle>
+    <p *ngIf="outputDetections.get(landmark.images[0]) !== undefined &&
+    outputDetections.get(landmark.images[0]).length > 0">The landmark from this image has been detected as:</p>
+    <p *ngFor="let detection of outputDetections.get(landmark.images[0])">{{detection.name}},
+      score: {{(detection.score | number : '1.2-2') || "-" }}%
+    </p>
+    <img alt="Landmark prediction" mat-card-image src={{landmark.images[0]}}>
+  </mat-card>
+</div>
+<div *ngIf="predictedLandmarks" class="map-container">
+  <mat-card>
+    <google-map
+      [center]="markers[0].position"
+      [zoom]="13"
+      height="500px"
+      width="80%">
+      <map-marker
+        *ngFor="let marker of markers"
+        [position]="marker.position"
+        [title]="marker.title">
+      </map-marker>
+    </google-map>
+  </mat-card>
+</div>

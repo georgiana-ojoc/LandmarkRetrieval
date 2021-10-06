@@ -1,0 +1,12 @@
+dataset_path: D:\Master\Anul 1\Semestrul I\IngineriaProgramarii\Proiect\dataset
+dataset_folder: train
+labeled_samples_file: train.csv
+clean_dataset_folder: selected dataset
+training_folder: training
+validation_folder: validation
+testing_folder: testing
+application_folder: application
+percentage: 10
+training_percentage: 0.8
+validation_percentage: 0.1
+testing_percentage: 0.1

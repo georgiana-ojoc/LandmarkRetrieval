@@ -8,3 +8,4 @@
 - Gabriela Neagu: <gabriela0neagu@gmail.com>
 - Georgiana Ojoc (Scrum Master): <georgiana.ojoc@gmail.com>
 - George Stoica: <sgeorge.sstoica99@gmail.com>
+### [Board](https://github.com/georgiana-ojoc/LandmarkRetrieval/projects/1)

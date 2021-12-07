@@ -30,6 +30,10 @@ public class RatingService {
         return ratingRepository.save(rating);
     }
 
+    public Double getAverageRatingsForModel(String model) {
+        return ratingRepository.getAverageByModel(model);
+    }
+
     @Transactional
     public Rating updateRating(Long id, Rating newRating) throws ModelNotFoundException {
         Rating rating = ratingRepository.findById(id)

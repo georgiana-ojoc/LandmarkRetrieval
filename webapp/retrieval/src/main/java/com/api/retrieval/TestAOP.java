@@ -35,7 +35,7 @@ public class TestAOP {
 
     private void createRating() {
 
-        Rating rating = new Rating(8, "ResNet");
+        Rating rating = new Rating(8.0, "ResNet");
 
         RestTemplate restTemplate = new RestTemplate();
         Rating result = restTemplate.postForObject(RATINGS_URL, rating, Rating.class);
@@ -46,7 +46,7 @@ public class TestAOP {
     private void updateRating(String id) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", id);
-        Rating rating = new Rating(6, "ResNet");
+        Rating rating = new Rating(6.0, "ResNet");
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(RATINGS_URL+"/{id}", rating, params);
     }

@@ -1,0 +1,50 @@
+<mat-grid-list cols="4" rowHeight="2:1">
+    <mat-grid-tile style="background-image:url('../../../../assets/london.jpg'); background-size: cover;"></mat-grid-tile>
+    <mat-grid-tile style="background-image:url('../../../../assets/india.jpg'); background-size: cover;"></mat-grid-tile>
+    <mat-grid-tile style="background-image:url('../../../../assets/sydney.jpg'); background-size: cover;"></mat-grid-tile>
+    <mat-grid-tile style="background-image:url('../../../../assets/turkey.jpg'); background-size: cover;"></mat-grid-tile>
+</mat-grid-list>
+<div class="main-container">
+    <p class="main-container-title">Get images of the same or other similar landmarks.</p>
+    <p class="main-container-subtitle">Simply choose a model and upload one photo</p>
+    <mat-card>
+        <p class="card-subtitle">Select the model you prefer for image retrieval</p>
+        <mat-card-content class="request-content">
+            <div class="model-content">
+                <mat-form-field appearance="fill">
+                    <mat-label>Selected retrieval model</mat-label>
+                    <mat-select [(value)]="selectedModel">
+                        <mat-option *ngFor="let model of models" [value]="model">{{model.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="model-content-info">
+                    <p>{{selectedModel.description}}</p>
+                    <p>This model has the following accuracy: <strong>95%</strong> (training), <strong>90%</strong> (testing), <strong>90%</strong> (validation).</p>
+                    <p>The user rating is <strong>8.5/10</strong></p>
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="upload-content">
+                <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+                <div class="file-upload">
+                    <p class="card-subtitle">Upload the target photo</p>
+                    <div class="upload">
+                        {{fileName || "No file uploaded yet."}}
+
+                        <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+                          <mat-icon>attach_file</mat-icon>
+                        </button>
+                    </div>
+                    <mat-checkbox class="example-margin" color="primary" [(ngModel)]="getLocation">Get location for given landmark</mat-checkbox>
+                </div>
+            </div>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="retrieveImages()">Retrieve similar landmarks</button>
+            </mat-card-actions>
+            <mat-card-footer>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </mat-card-footer>
+        </mat-card-content>
+    </mat-card>
+</div>

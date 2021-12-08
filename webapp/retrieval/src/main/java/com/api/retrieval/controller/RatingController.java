@@ -36,19 +36,19 @@ public class RatingController {
         return ResponseEntity.ok(ratings);
     }
 
+    @GetMapping("/{model}/average")
+    public ResponseEntity<?> getAverageRating(@PathVariable(value = "model") String model) {
+        Double average = ratingService.getAverageRatingForModel(model);
+        System.out.println(average);
+        return ResponseEntity.ok(average);
+    }
+
     @PostMapping("")
     @MonitorTime
     public ResponseEntity<Rating> createRating(@Valid @RequestBody Rating rating) {
 
         Rating savedRating = ratingService.addRating(rating);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRating);
-    }
-
-    @GetMapping("/{model}/average")
-    public ResponseEntity<?> getAverageRating(@PathVariable(value = "model") String model) {
-        Double average = ratingService.getAverageRatingsForModel(model);
-        System.out.println(average);
-        return ResponseEntity.ok(average);
     }
 
     @PutMapping("/{id}")

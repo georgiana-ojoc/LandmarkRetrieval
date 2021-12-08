@@ -1,4 +1,4 @@
-package com.api.retrieval.tests;
+package com.api.retrieval.repository;
 
 
 import com.api.retrieval.model.Rating;

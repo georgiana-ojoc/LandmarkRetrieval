@@ -22,16 +22,16 @@ public class RatingService {
         return ratingRepository.findRatingsByModel(model);
     }
 
+    public Double getAverageRatingForModel(String model) {
+        return ratingRepository.getAverageByModel(model);
+    }
+
     @Transactional
     //https://docs.spring.io/spring-framework/docs/4.2.x/spring-framework-reference/html/transaction.html#transaction-declarative
     //The Spring Framework’s declarative transaction management already uses AOP
     // For example, you can insert custom behavior in the case of transaction rollback. You can also add arbitrary advice, along with the transactional advice.
     public Rating addRating(Rating rating) {
         return ratingRepository.save(rating);
-    }
-
-    public Double getAverageRatingsForModel(String model) {
-        return ratingRepository.getAverageByModel(model);
     }
 
     @Transactional

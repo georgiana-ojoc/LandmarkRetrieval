@@ -1,6 +1,7 @@
 package com.api.retrieval.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,7 +11,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Builder
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "ratings")
 public class Rating {
     @Id
@@ -32,30 +38,6 @@ public class Rating {
 
     public Rating(Double score, String model) {
         this.score = score;
-        this.model = model;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
         this.model = model;
     }
 

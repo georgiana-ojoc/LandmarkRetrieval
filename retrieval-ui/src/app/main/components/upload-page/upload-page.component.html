@@ -43,8 +43,9 @@
                 <button mat-raised-button color="primary" (click)="retrieveImages()">Retrieve similar landmarks</button>
             </mat-card-actions>
             <mat-card-footer>
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <mat-progress-bar class="progress-bar" mode="determinate" [value]="requestProgress" *ngIf="requestProgress"></mat-progress-bar>
             </mat-card-footer>
         </mat-card-content>
     </mat-card>
 </div>
+<app-prediction-section [predictedLandmarks]="predictedLandmarks" [inputImage]="previewFile"></app-prediction-section>

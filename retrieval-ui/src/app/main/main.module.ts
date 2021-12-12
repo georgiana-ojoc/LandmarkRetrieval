@@ -5,6 +5,7 @@ import { MainRoutingModule } from './main-routing.module';
 import { MaterialModule } from '../helpers/material.module';
 import { CustomDialogComponent } from './shared/custom-dialog/custom-dialog.component';
 import { FormsModule } from '@angular/forms';
+import { PredictionSectionComponent } from './components/prediction-section/prediction-section.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { FormsModule } from '@angular/forms';
   ],
   declarations: [
     UploadPageComponent,
-    CustomDialogComponent
+    CustomDialogComponent,
+    PredictionSectionComponent
   ]
 })
 export class MainModule { }

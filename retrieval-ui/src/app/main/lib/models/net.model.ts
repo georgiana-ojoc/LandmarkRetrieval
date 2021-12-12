@@ -1,5 +1,6 @@
 export class NetModel {
   name: string;
+  value: string;
   description: string;
   accuracy: number;
 

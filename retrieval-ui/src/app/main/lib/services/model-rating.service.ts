@@ -1,8 +1,7 @@
-import {HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpEvent} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {catchError, finalize, Observable, tap, throwError} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {NetModel} from '../models/net.model';
-import {PredictionModel} from '../models/prediction.model';
 import {RatingModel} from "../models/rating.model";
 
 @Injectable({
@@ -74,7 +73,7 @@ export class ModelRatingService {
       errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
     }
     console.error(errorMessage);
-    return throwError(errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 
 }

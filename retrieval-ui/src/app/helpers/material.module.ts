@@ -16,6 +16,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { BarRatingModule } from "ngx-bar-rating";
 
 @NgModule({
     declarations: [],
@@ -36,7 +37,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatDividerModule,
         MatDialogModule,
         MatCheckboxModule,
-        MatExpansionModule
+        MatExpansionModule,
+        BarRatingModule
     ],
     exports: [
         CommonModule,
@@ -55,7 +57,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatDividerModule,
         MatDialogModule,
         MatCheckboxModule,
-        MatExpansionModule
+        MatExpansionModule,
+        BarRatingModule
     ]
 })
 export class MaterialModule { }

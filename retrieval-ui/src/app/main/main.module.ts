@@ -6,6 +6,7 @@ import { MaterialModule } from '../helpers/material.module';
 import { CustomDialogComponent } from './shared/custom-dialog/custom-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { PredictionSectionComponent } from './components/prediction-section/prediction-section.component';
+import { PredictionDetailDialogComponent } from './components/prediction-detail-dialog/prediction-detail-dialog.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { PredictionSectionComponent } from './components/prediction-section/pred
   declarations: [
     UploadPageComponent,
     CustomDialogComponent,
-    PredictionSectionComponent
+    PredictionSectionComponent,
+    PredictionDetailDialogComponent
   ]
 })
 export class MainModule { }

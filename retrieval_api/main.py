@@ -1,9 +1,10 @@
 from PIL import Image
 from flask import Flask, request, jsonify, abort, make_response
-
+from flask_cors import CORS
 from predictor import Predictor
 
 application = Flask(__name__)
+CORS(application)
 
 
 @application.errorhandler(404)

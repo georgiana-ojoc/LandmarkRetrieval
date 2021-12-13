@@ -1,5 +1,5 @@
-import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NetModel } from '../../lib/models/net.model';
 import { PredictionModel } from '../../lib/models/prediction.model';
@@ -11,7 +11,7 @@ import { CustomDialogComponent } from '../../shared/custom-dialog/custom-dialog.
   templateUrl: './upload-page.component.html',
   styleUrls: ['./upload-page.component.scss']
 })
-export class UploadPageComponent implements OnInit {
+export class UploadPageComponent {
 
   fileName = '';
   models: NetModel[] = [new NetModel({ name: "ResNet IBN GEM", value: "resnet-ibn-gem", description: "Residual Networks, or ResNets, learn residual functions with reference to the layer inputs, instead of learning unreferenced functions." }),
@@ -25,9 +25,6 @@ export class UploadPageComponent implements OnInit {
 
 
   constructor(private retrievalService: LandmarkRetrievalService, public dialog: MatDialog) { }
-
-  ngOnInit(): void {
-  }
 
   onFileSelected(event) {
 
@@ -47,7 +44,7 @@ export class UploadPageComponent implements OnInit {
 
   retrieveImages() {
     if (!this.fileName) {
-      const dialogRef = this.dialog.open(CustomDialogComponent, {
+      this.dialog.open(CustomDialogComponent, {
         data: { title: "Wrong request", body: "You must upload a photo first!", icon: "error" }
       });
     }
@@ -64,7 +61,7 @@ export class UploadPageComponent implements OnInit {
           }
         },
         error: (err: any) => {
-          const msg = 'Could not upload the file: ' + this.fileName;
+          console.log('Could not upload the file: ' + this.fileName);
         }
       });
     }

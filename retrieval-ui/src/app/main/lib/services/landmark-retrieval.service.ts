@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { NetModel } from '../models/net.model';
 import { PredictionModel } from '../models/prediction.model';
 

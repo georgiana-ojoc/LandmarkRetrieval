@@ -1,6 +1,16 @@
 .input-container {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
+}
+
+.input-container-content {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    .input-info {
+        margin-left: 20px;
+    }
 }
 
 .response-container {
@@ -10,23 +20,17 @@
     margin: 10px;
 }
 
-mat-card {
+.prediction-card {
     width: 30%;
 }
 
-// .input-image {
-//     display: block;
-//     margin: auto;
-//     width: 30%;
-// }
-// mat-card img {
-//     object-fit: cover;
-//     /*this makes the image in src fit to the size specified below*/
-//     width: 100%;
-// }
-.img-tile {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    /* remove extra space below image */
+.input-image {
+    width: 50%;
+}
+
+.input-container-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }

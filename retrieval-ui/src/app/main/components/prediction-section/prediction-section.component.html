@@ -8,7 +8,7 @@
                     <p>Below you can find the best 3 predictions along with their probabilities.</p>
                     <p>How pleased are you with the result? Rate the results from 0 to 10</p>
                     <bar-rating [(rate)]="rate" [max]="10" [theme]="'square'"></bar-rating>
-                    <button mat-raised-button color="primary">Submit rating</button>
+                    <button mat-raised-button color="primary" (click)="onRatingAdd()" [disabled]="!canRate">Submit rating</button>
                 </div>
             </div>
         </mat-card-content>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PredictionModel } from '../../lib/models/prediction.model';
 import { PredictionDetailDialogComponent } from '../prediction-detail-dialog/prediction-detail-dialog.component';
@@ -12,10 +12,13 @@ export class PredictionSectionComponent implements AfterViewInit {
 
   _predictedLandmarks: PredictionModel[] = undefined;
   rate = 0;
+  canRate = true;
 
   @Input() set predictedLandmarks(value: PredictionModel[]) {
     if (value != undefined && value != null && this._predictedLandmarks != value) {
       this.scroll(this.predictionSection?.nativeElement);
+      this.canRate = true;
+      this.rate = 0;
     }
     this._predictedLandmarks = value;
   }
@@ -24,8 +27,9 @@ export class PredictionSectionComponent implements AfterViewInit {
     return this._predictedLandmarks;
   }
 
-  @Input()
-  inputImage;
+  @Input() inputImage;
+
+  @Output() ratingAdded = new EventEmitter<any>();
 
   @ViewChild('prediction') predictionSection: ElementRef;
 
@@ -42,11 +46,16 @@ export class PredictionSectionComponent implements AfterViewInit {
   }
 
   openDialog(index, landmark) {
-    const dialogRef = this.dialog.open(PredictionDetailDialogComponent , {
-      data: { count: index+1 }
+    const dialogRef = this.dialog.open(PredictionDetailDialogComponent, {
+      data: { count: index + 1 }
     });
     let instance = dialogRef.componentInstance;
     instance.landmark = landmark;
+  }
+
+  onRatingAdd() {
+    this.ratingAdded.emit(this.rate);
+    this.canRate = false;
   }
 
 }

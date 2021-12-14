@@ -1,9 +1,13 @@
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NetAccuracyModel } from '../../lib/models/net-accuracy.model';
 import { NetModel } from '../../lib/models/net.model';
 import { PredictionModel } from '../../lib/models/prediction.model';
+import { RatingModel } from '../../lib/models/rating.model';
 import { LandmarkRetrievalService } from '../../lib/services/landmark-retrieval.service';
+import { ModelRatingService } from '../../lib/services/model-rating.service';
 import { CustomDialogComponent } from '../../shared/custom-dialog/custom-dialog.component';
 
 @Component({
@@ -11,11 +15,11 @@ import { CustomDialogComponent } from '../../shared/custom-dialog/custom-dialog.
   templateUrl: './upload-page.component.html',
   styleUrls: ['./upload-page.component.scss']
 })
-export class UploadPageComponent {
+export class UploadPageComponent implements OnInit {
 
   fileName = '';
-  models: NetModel[] = [new NetModel({ name: "ResNet IBN GEM", value: "resnet-ibn-gem", description: "Residual Networks, or ResNets, learn residual functions with reference to the layer inputs, instead of learning unreferenced functions." }),
-   new NetModel({ name: "EfficientNet", value: "efficientnet", description: "EfficientNet is a convolutional neural network architecture and scaling method that uniformly scales all dimensions of depth/width/resolution using a compound coefficient. " })];
+  models: NetModel[] = [new NetModel({ name: "ResNet IBN GEM", value: "resnet-ibn-gem", description: "Residual Networks, or ResNets, learn residual functions with reference to the layer inputs, instead of learning unreferenced functions.", accuracy: new NetAccuracyModel({train: 96, test: 95, validation: 95}) }),
+  new NetModel({ name: "EfficientNet", value: "efficientnet", description: "EfficientNet is a convolutional neural network architecture and scaling method that uniformly scales all dimensions of depth/width/resolution using a compound coefficient. ", accuracy: new NetAccuracyModel({train: 96, test: 87, validation: 87}) })];
   selectedModel: NetModel = this.models[0];
   getLocation = false;
   file: File;
@@ -24,7 +28,17 @@ export class UploadPageComponent {
   predictedLandmarks: PredictionModel[] = undefined;
 
 
-  constructor(private retrievalService: LandmarkRetrievalService, public dialog: MatDialog) { }
+  constructor(
+    private retrievalService: LandmarkRetrievalService,
+    private modelRatingService: ModelRatingService,
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar
+    ) { }
+
+
+  ngOnInit(): void {
+    this.initModelRatings();
+  }
 
   onFileSelected(event) {
 
@@ -39,6 +53,34 @@ export class UploadPageComponent {
 
       reader.readAsDataURL(this.file);
     }
+  }
+
+  initModelRatings() {
+    this.models.forEach(model => {
+
+      this.modelRatingService.getAverageRatingsForModel(model).subscribe({
+        next: (event: any) => {
+          if (event instanceof HttpResponse) {
+            model.rating = event.body;
+          }
+        }
+      });
+
+    });
+  }
+
+  addRating(score: number) {
+    const ratingModel = new RatingModel({ score: score, model: this.selectedModel.value });
+    this.modelRatingService.postRatingForModel(ratingModel).subscribe({
+      next: (event: any) => {
+        if (event instanceof HttpResponse) {
+          this._snackBar.open("Your rating was added", "Ok");
+        }
+      },
+      error: (event: any) => {
+        this._snackBar.open("There was a error. Your rating could not be added!", "Ok");
+      }
+    });
   }
 
 
@@ -61,7 +103,8 @@ export class UploadPageComponent {
           }
         },
         error: (err: any) => {
-          console.log('Could not upload the file: ' + this.fileName);
+          console.log('Could not retrieve images for: ' + this.fileName);
+          this.requestProgress = 0;
         }
       });
     }

@@ -24,7 +24,7 @@ export class ModelRatingService {
   }
 
   getRatingsForModel(model: NetModel): Observable<HttpEvent<RatingModel[]>> {
-    return this._httpClient.get<RatingModel[]>(`${this._ratingApiUrl}/${model.name}`, {
+    return this._httpClient.get<RatingModel[]>(`${this._ratingApiUrl}/${model.value}`, {
       reportProgress: true,
       observe: 'events',
       responseType: 'json',
@@ -34,7 +34,7 @@ export class ModelRatingService {
   }
 
   getAverageRatingsForModel(model: NetModel): Observable<HttpEvent<number>> {
-    return this._httpClient.get<number>(`${this._ratingApiUrl}/${model.name}/average`, {
+    return this._httpClient.get<number>(`${this._ratingApiUrl}/${model.value}/average`, {
       reportProgress: true,
       observe: 'events',
       responseType: 'json',

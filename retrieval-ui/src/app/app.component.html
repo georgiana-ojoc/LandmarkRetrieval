@@ -1,6 +1,6 @@
-<mat-toolbar color="primary">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
+<mat-toolbar color="primary" id="toolbar" class="sticky">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="reload()">
+      <mat-icon>refresh</mat-icon>
     </button>
     <span>Landmark Retrieval</span>
 </mat-toolbar>

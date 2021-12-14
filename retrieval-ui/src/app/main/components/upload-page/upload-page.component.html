@@ -20,8 +20,10 @@
 
                 <div class="model-content-info">
                     <p>{{selectedModel.description}}</p>
-                    <p>This model has the following accuracy: <strong>95%</strong> (training), <strong>90%</strong> (testing), <strong>90%</strong> (validation).</p>
-                    <p>The user rating is <strong>8.5/10</strong></p>
+                    <p>This model has the following accuracy: <strong>{{selectedModel.accuracy.train}}%</strong> (train),
+                        <strong>{{selectedModel.accuracy.test}}%</strong> (test),
+                        <strong>{{selectedModel.accuracy.validation}}%</strong> (validation).</p>
+                    <p>The user rating is <strong>{{selectedModel.rating | number : '1.2-2' ||  "-" }} /10</strong></p>
                 </div>
             </div>
             <mat-divider></mat-divider>
@@ -48,4 +50,4 @@
         </mat-card-content>
     </mat-card>
 </div>
-<app-prediction-section [predictedLandmarks]="predictedLandmarks" [inputImage]="previewFile"></app-prediction-section>
+<app-prediction-section [predictedLandmarks]="predictedLandmarks" [inputImage]="previewFile" (ratingAdded)="addRating($event)"></app-prediction-section>

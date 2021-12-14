@@ -23,7 +23,7 @@
                     <p>This model has the following accuracy: <strong>{{selectedModel.accuracy.train}}%</strong> (train),
                         <strong>{{selectedModel.accuracy.test}}%</strong> (test),
                         <strong>{{selectedModel.accuracy.validation}}%</strong> (validation).</p>
-                    <p>The user rating is <strong>{{selectedModel.rating | number : '1.2-2' ||  "-" }} /10</strong></p>
+                    <p>The user rating is <strong>{{(selectedModel.rating | number : '1.2-2') ||  "-" }} /10</strong></p>
                 </div>
             </div>
             <mat-divider></mat-divider>

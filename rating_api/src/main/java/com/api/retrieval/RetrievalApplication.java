@@ -10,8 +10,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.api.retrieval.model")
 public class RetrievalApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RetrievalApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RetrievalApplication.class, args);
+    }
+
 
 }

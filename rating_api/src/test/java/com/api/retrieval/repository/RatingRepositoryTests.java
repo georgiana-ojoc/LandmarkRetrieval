@@ -1,8 +1,7 @@
 package com.api.retrieval.repository;
 
 
-import com.api.retrieval.model.Rating;
-import com.api.retrieval.repository.RatingRepository;
+import com.api.retrieval.model.domain.Rating;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

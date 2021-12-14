@@ -1,6 +1,6 @@
 package com.api.retrieval;
 
-import com.api.retrieval.model.Rating;
+import com.api.retrieval.model.domain.Rating;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 

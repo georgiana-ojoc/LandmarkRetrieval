@@ -1,4 +1,4 @@
-package com.api.retrieval.model;
+package com.api.retrieval.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

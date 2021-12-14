@@ -1,6 +1,6 @@
 package com.api.retrieval.controller;
 
-import com.api.retrieval.model.Rating;
+import com.api.retrieval.model.domain.Rating;
 import com.api.retrieval.repository.RatingRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;

@@ -2,8 +2,10 @@ package com.api.retrieval.controller;
 
 import com.api.retrieval.aspect.annotations.MonitorTime;
 import com.api.retrieval.exceptions.ModelNotFoundException;
-import com.api.retrieval.model.Rating;
-import com.api.retrieval.service.RatingService;
+import com.api.retrieval.model.domain.Rating;
+import com.api.retrieval.model.dto.RatingDTO;
+import com.api.retrieval.service.IRatingService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/ratings")
@@ -20,42 +23,45 @@ import java.util.List;
 public class RatingController {
 
     @Autowired
-    private RatingService ratingService;
+    private IRatingService ratingService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping()
     @MonitorTime
-    public ResponseEntity<List<Rating>> getAllRatings() {
+    public ResponseEntity<List<RatingDTO>> getAllRatings() {
         List<Rating> ratings = ratingService.getAllRatings();
-        return ResponseEntity.ok(ratings);
+        return ResponseEntity.ok(ratings.stream().map(rating -> modelMapper.map(rating, RatingDTO.class)).collect(Collectors.toList()));
     }
 
     @GetMapping("/{model}")
     @MonitorTime
-    public ResponseEntity<List<Rating>> getRatingsForModel(@PathVariable(value = "model") String model) {
+    public ResponseEntity<List<RatingDTO>> getRatingsForModel(@PathVariable(value = "model") String model) {
 
         List<Rating> ratings = ratingService.getRatingsForModel(model);
-        return ResponseEntity.ok(ratings);
+        return ResponseEntity.ok(ratings.stream().map(rating -> modelMapper.map(rating, RatingDTO.class)).collect(Collectors.toList()));
     }
 
     @GetMapping("/{model}/average")
     public ResponseEntity<?> getAverageRating(@PathVariable(value = "model") String model) {
         Double average = ratingService.getAverageRatingForModel(model);
-        System.out.println(average);
         return ResponseEntity.ok(average);
     }
 
     @PostMapping("")
     @MonitorTime
-    public ResponseEntity<Rating> createRating(@Valid @RequestBody Rating rating) {
+    public ResponseEntity<RatingDTO> createRating(@Valid @RequestBody Rating rating) {
 
+        //extract variable
         Rating savedRating = ratingService.addRating(rating);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRating);
+        return ResponseEntity.status(HttpStatus.CREATED).body((modelMapper.map(savedRating, RatingDTO.class)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Rating> updateRating(@PathVariable(value = "id") Long id,
-                                               @Valid @RequestBody Rating newRating) throws ModelNotFoundException {
+    public ResponseEntity<RatingDTO> updateRating(@PathVariable(value = "id") Long id,
+                                                  @Valid @RequestBody Rating newRating) throws ModelNotFoundException {
         Rating rating = ratingService.updateRating(id, newRating);
-        return ResponseEntity.ok(rating);
+        return ResponseEntity.ok(modelMapper.map(rating, RatingDTO.class));
     }
 }

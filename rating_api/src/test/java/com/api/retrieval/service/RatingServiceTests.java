@@ -1,7 +1,7 @@
 package com.api.retrieval.service;
 
 import com.api.retrieval.exceptions.ModelNotFoundException;
-import com.api.retrieval.model.Rating;
+import com.api.retrieval.model.domain.Rating;
 import com.api.retrieval.repository.RatingRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

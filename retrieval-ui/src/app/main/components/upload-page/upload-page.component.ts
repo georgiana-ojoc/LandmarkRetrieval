@@ -2,10 +2,12 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LocationModel } from '../../lib/models/location.model';
 import { NetAccuracyModel } from '../../lib/models/net-accuracy.model';
 import { NetModel } from '../../lib/models/net.model';
 import { PredictionModel } from '../../lib/models/prediction.model';
 import { RatingModel } from '../../lib/models/rating.model';
+import { LandmarkLocationService } from '../../lib/services/landmark-location.service';
 import { LandmarkRetrievalService } from '../../lib/services/landmark-retrieval.service';
 import { ModelRatingService } from '../../lib/services/model-rating.service';
 import { CustomDialogComponent } from '../../shared/custom-dialog/custom-dialog.component';
@@ -26,11 +28,13 @@ export class UploadPageComponent implements OnInit {
   previewFile: string;
   requestProgress: number;
   predictedLandmarks: PredictionModel[] = undefined;
+  location: LocationModel = undefined;
 
 
   constructor(
     private retrievalService: LandmarkRetrievalService,
     private modelRatingService: ModelRatingService,
+    private locationService: LandmarkLocationService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar
     ) { }
@@ -84,29 +88,49 @@ export class UploadPageComponent implements OnInit {
   }
 
 
-  retrieveImages() {
+  retrieveResults() {
     if (!this.fileName) {
       this.dialog.open(CustomDialogComponent, {
         data: { title: "Wrong request", body: "You must upload a photo first!", icon: "error" }
       });
     }
     else {
-      this.retrievalService.retrieveSimilarLandmarks(this.file, this.selectedModel).subscribe({
+      this.retrieveSimilarLandmarks();
+
+      this.retrieveLocation();
+    }
+  }
+
+  retrieveSimilarLandmarks() {
+    this.retrievalService.retrieveSimilarLandmarks(this.file, this.selectedModel).subscribe({
+      next: (event: any) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.requestProgress = Math.round((100 * event.loaded) / event.total);
+        }
+        else if (event instanceof HttpResponse) {
+          this.requestProgress = null;
+          this.predictedLandmarks = event.body;
+        }
+      },
+      error: (err: any) => {
+        console.log('Could not retrieve images for: ' + this.fileName);
+        this.requestProgress = 0;
+      }
+    });
+  }
+
+  retrieveLocation() {
+    if(this.getLocation) {
+      this.locationService.retrieveLandmarkLocation(this.file).subscribe({
         next: (event: any) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this.requestProgress = Math.round(
-              (100 * event.loaded) / event.total);
-          }
-          else if (event instanceof HttpResponse) {
-            this.requestProgress = null;
-            this.predictedLandmarks = event.body;
+          if (event instanceof HttpResponse) {
+            this.location = event.body;
           }
         },
         error: (err: any) => {
-          console.log('Could not retrieve images for: ' + this.fileName);
-          this.requestProgress = 0;
+          console.log('Could not retrieve location for: ' + this.fileName);
         }
-      });
+      })
     }
   }
 

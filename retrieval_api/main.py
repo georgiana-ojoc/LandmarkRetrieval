@@ -3,11 +3,12 @@ from flask import Flask, request, jsonify, abort, make_response
 from google.cloud import vision
 import io
 import os
+from flask_cors import CORS
 
 from predictor import Predictor
 
 application = Flask(__name__)
-
+CORS(application)
 
 @application.errorhandler(404)
 def not_found(_):

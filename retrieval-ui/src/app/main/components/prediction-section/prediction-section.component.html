@@ -5,6 +5,10 @@
                 <img [src]="inputImage" class="input-image" alt="Input Image">
                 <div class="input-info">
                     <p class="input-container-title">Target photo</p>
+                    <div *ngIf="showLocation && location" class="input-location">
+                        <p>The landmark present in your photo has been associated with the following names:</p>
+                        <p><strong>{{location.landmark.join(', ')}}</strong></p>
+                    </div>
                     <p>Below you can find the best 3 predictions along with their probabilities.</p>
                     <p>How pleased are you with the result? Rate the results from 0 to 10</p>
                     <bar-rating [(rate)]="rate" [max]="10" [theme]="'square'"></bar-rating>

@@ -29,6 +29,10 @@ export class PredictionSectionComponent implements AfterViewInit {
 
   @Input() inputImage;
 
+  @Input() showLocation;
+
+  @Input() location;
+
   @Output() ratingAdded = new EventEmitter<any>();
 
   @ViewChild('prediction') predictionSection: ElementRef;

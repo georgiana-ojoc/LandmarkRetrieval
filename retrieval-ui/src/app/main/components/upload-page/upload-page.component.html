@@ -42,7 +42,7 @@
                 </div>
             </div>
             <mat-card-actions>
-                <button mat-raised-button color="primary" (click)="retrieveImages()">Retrieve similar landmarks</button>
+                <button mat-raised-button color="primary" (click)="retrieveResults()">Retrieve similar landmarks</button>
             </mat-card-actions>
             <mat-card-footer>
                 <mat-progress-bar class="progress-bar" mode="determinate" [value]="requestProgress" *ngIf="requestProgress"></mat-progress-bar>
@@ -50,4 +50,5 @@
         </mat-card-content>
     </mat-card>
 </div>
-<app-prediction-section [predictedLandmarks]="predictedLandmarks" [inputImage]="previewFile" (ratingAdded)="addRating($event)"></app-prediction-section>
+<app-prediction-section [predictedLandmarks]="predictedLandmarks" [inputImage]="previewFile" [showLocation]="getLocation" [location]="location" (ratingAdded)=" addRating($event) ">
+</app-prediction-section>

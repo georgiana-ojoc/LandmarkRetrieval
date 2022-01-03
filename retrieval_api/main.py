@@ -64,7 +64,7 @@ def get_landmark():
 
     json_response = {"landmark": []}
     for landmark in landmarks:
-        json_response["landmark"].append(landmark.description)
+        json_response["landmark"].append((landmark.description, landmark.score))
 
     if response.error.message:
         json_response["error"] = "{}".format(response.error.message)

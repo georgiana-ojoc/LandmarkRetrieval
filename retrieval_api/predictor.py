@@ -13,7 +13,6 @@ class GeM(torch.nn.Module):
         super(GeM, self).__init__()
         self.eps = eps
         self.p = Parameter(torch.ones(1) * p)
-
     def forward(self, x):
         return adaptive_avg_pool2d(x.clamp(min=self.eps).pow(self.p), (1, 1)).pow(1. / self.p)
 
@@ -57,6 +56,30 @@ class ResNetIBNGeM(Model):
         return model
 
 
+class ResNetIBNGeMTraining(Model):
+    def __init__(self):
+        super().__init__()
+
+    def load_model(self):
+        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False, force_reload=True)
+        model.avgpool = GeM()
+        model.fc = torch.nn.Linear(model.fc.in_features, 13018)
+        model.load_state_dict(torch.load('models/resnet_training.pt'))
+        return model
+
+
+class ResNetIBNGeMVal(Model):
+    def __init__(self):
+        super().__init__()
+
+    def load_model(self):
+        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False, force_reload=True)
+        model.avgpool = GeM()
+        model.fc = torch.nn.Linear(model.fc.in_features, 13018)
+        model.load_state_dict(torch.load('models/resnet_val.pt'))
+        return model
+
+
 class _EfficientNet(Model):
     def __init__(self):
         super().__init__()
@@ -71,12 +94,20 @@ class Predictor:
     def __init__(self, model):
         if model == 'resnet-ibn-gem':
             self.model = ResNetIBNGeM()
+            self.labels = json.load(open('labels.json'))
         elif model == 'efficientnet':
             self.model = _EfficientNet()
+            self.labels = json.load(open('labels.json'))
+        elif model == 'resnet-validation':
+            self.model = ResNetIBNGeMVal()
+            self.labels = json.load(open('labels_extended.json'))
+        elif model == 'resnet-training':
+            self.model = ResNetIBNGeMTraining()
+            self.labels = json.load(open('labels_extended.json'))
         else:
             self.model = None
             return
-        self.labels = json.load(open('labels.json'))
+
         self.storage_url = 'https://landmark-retrieval.s3.eu-central-1.amazonaws.com'
 
     def predict(self, image):
@@ -92,7 +123,8 @@ class Predictor:
         for index in range(3):
             result += [{
                 'images': [f'{self.storage_url}/{self.labels[indices[index]]}/{image}.jpg'
-                           for image in range(10)],
-                'probability': str(best_predictions[index])
+                           for image in range(10) if indices[index].item() < len(self.labels)],
+                'probability': str(best_predictions[index]),
+                'label': self.labels[indices[index]] if indices[index].item() < len(self.labels) else None,
             }]
         return result

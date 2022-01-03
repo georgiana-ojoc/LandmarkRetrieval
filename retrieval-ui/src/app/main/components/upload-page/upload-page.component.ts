@@ -20,8 +20,11 @@ import { CustomDialogComponent } from '../../shared/custom-dialog/custom-dialog.
 export class UploadPageComponent implements OnInit {
 
   fileName = '';
+
   models: NetModel[] = [new NetModel({ name: "ResNet IBN GEM", value: "resnet-ibn-gem", description: "Residual Networks, or ResNets, learn residual functions with reference to the layer inputs, instead of learning unreferenced functions.", accuracy: new NetAccuracyModel({train: 96, test: 95, validation: 95}) }),
-  new NetModel({ name: "EfficientNet", value: "efficientnet", description: "EfficientNet is a convolutional neural network architecture and scaling method that uniformly scales all dimensions of depth/width/resolution using a compound coefficient. ", accuracy: new NetAccuracyModel({train: 96, test: 87, validation: 87}) })];
+  new NetModel({ name: "EfficientNet", value: "efficientnet", description: "EfficientNet is a convolutional neural network architecture and scaling method that uniformly scales all dimensions of depth/width/resolution using a compound coefficient. ", accuracy: new NetAccuracyModel({train: 96, test: 87, validation: 87}) }),
+   new NetModel({ name: "ResNet Validation", value: "resnet-validation", description: "ResNet trained on validation. ", accuracy: new NetAccuracyModel({train: NaN, test: 0.61, validation: 90})}),
+   new NetModel({ name: "ResNet Training", value: "resnet-training", description: "ResNet trained on training. ", accuracy: new NetAccuracyModel({train: 85, test: 5, validation: NaN}) }),];
   selectedModel: NetModel = this.models[0];
   getLocation = false;
   file: File;
@@ -109,6 +112,7 @@ export class UploadPageComponent implements OnInit {
         }
         else if (event instanceof HttpResponse) {
           this.requestProgress = null;
+          console.log(event.body);
           this.predictedLandmarks = event.body;
         }
       },

@@ -10,6 +10,7 @@ from predictor import Predictor
 application = Flask(__name__)
 CORS(application)
 
+
 @application.errorhandler(404)
 def not_found(_):
     return make_response(jsonify({
@@ -70,5 +71,7 @@ def get_landmark():
         return make_response(jsonify(json_response), 500)
     return make_response(jsonify(json_response), 200)
 
+
 if __name__ == "__main__":
-    application.run(debug=True)
+    print("OK")
+    application.run(debug=False)

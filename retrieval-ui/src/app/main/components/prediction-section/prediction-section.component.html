@@ -7,7 +7,8 @@
                     <p class="input-container-title">Target photo</p>
                     <div *ngIf="showLocation && location" class="input-location">
                         <p>The landmark present in your photo has been associated with the following names:</p>
-                        <p><strong>{{location.landmark.join(', ')}}</strong></p>
+                        <p *ngFor="let landmarklocation of location.landmark; let l_i=index">{{landmarklocation[0]}}, score: {{(landmarklocation[1]| number : '1.2-2') || "-" }}%
+                        </p>
                     </div>
                     <p>Below you can find the best 3 predictions along with their probabilities.</p>
                     <p>How pleased are you with the result? Rate the results from 0 to 10</p>

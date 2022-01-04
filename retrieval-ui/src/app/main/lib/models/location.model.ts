@@ -1,3 +1,3 @@
 export class LocationModel {
-  landmark: string[]
+  landmark: any[];
 }

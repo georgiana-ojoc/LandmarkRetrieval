@@ -1,9 +1,10 @@
-from PIL import Image
-from flask import Flask, request, jsonify, abort, make_response
-from google.cloud import vision
 import io
 import os
+
+from PIL import Image
+from flask import Flask, request, jsonify, abort, make_response
 from flask_cors import CORS
+from google.cloud import vision
 
 from predictor import Predictor
 
@@ -39,7 +40,7 @@ def process_image(model):
 
 @application.route("/landmark", methods=["POST"])
 def get_landmark():
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "landmarkretrieval-7465959cdf7b.json"
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'landmark_retrieval.json'
     file = request.files.get('file', None)
     if file is None:
         return make_response(jsonify({
@@ -52,26 +53,31 @@ def get_landmark():
             'error': 'Invalid image'
         }), 400)
     client = vision.ImageAnnotatorClient()
-
-    img_byte_arr = io.BytesIO()
-    image.save(img_byte_arr, format='JPEG')
-    img_byte_arr = img_byte_arr.getvalue()
-
-    image = vision.Image(content=img_byte_arr)
-
+    byte_array = io.BytesIO()
+    image.save(byte_array, format='JPEG')
+    byte_array = byte_array.getvalue()
+    image = vision.Image(content=byte_array)
     response = client.landmark_detection(image=image)
-    landmarks = response.landmark_annotations
-
-    json_response = {"landmark": []}
-    for landmark in landmarks:
-        json_response["landmark"].append((landmark.description, landmark.score))
-
     if response.error.message:
-        json_response["error"] = "{}".format(response.error.message)
-        return make_response(jsonify(json_response), 500)
-    return make_response(jsonify(json_response), 200)
+        return make_response(jsonify({
+            'error': 'Could not detect landmark with Vision API'
+        }), 500)
+    landmarks = response.landmark_annotations
+    response = []
+    for landmark in landmarks:
+        locations = []
+        for location in landmark.locations:
+            locations += [{
+                'latitude': location.lat_lng.latitude,
+                'longitude': location.lat_lng.longitude
+            }]
+        response += [{
+            'name': landmark.description,
+            'score': landmark.score,
+            'locations': locations
+        }]
+    return make_response(jsonify(response), 200)
 
 
 if __name__ == "__main__":
-    print("OK")
     application.run(debug=False)

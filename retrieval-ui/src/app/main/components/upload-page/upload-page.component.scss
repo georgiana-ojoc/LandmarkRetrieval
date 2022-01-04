@@ -1,54 +1,62 @@
 .main-container {
-    display: flex;
-    flex-flow: column;
-    margin: auto;
-    align-items: center;
-    width: 70%;
-    .main-container-title {
-        font-size: 40px;
-        margin: 30px 0px 10px 0px;
-    }
-    .main-container-subtitle {
-        margin: 0px 0px 30px 0px;
-    }
-    mat-card {
-        width: 100%;
-    }
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  align-items: center;
+  width: 70%;
+
+  .main-container-title {
+    font-size: 40px;
+    margin: 30px 0px 10px 0px;
+  }
+
+  .main-container-subtitle {
+    margin: 0px 0px 30px 0px;
+  }
+
+  mat-card {
+    width: 100%;
+  }
 }
 
 .file-input {
-    display: none;
+  display: none;
 }
 
 .model-content {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin: 10px;
-    .model-content-info {
-        flex-grow: 1;
-        margin-left: 20px;
-    }
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+
+  .model-content-info {
+    flex-grow: 1;
+    margin-left: 20px;
+  }
 }
 
 .upload-content {
-    margin: 10px;
-    padding-top: 10px;
+  margin: 10px;
+  padding-top: 10px;
 }
 
 mat-card-actions {
-    float: right;
+  text-align: center;
 }
 
 .card-subtitle {
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .upload {
-    margin: 20px 0px 20px 0px;
+  margin: 20px 0px 20px 0px;
+
+  button {
+    margin-left: 5px;
+  }
 }
 
 // img {

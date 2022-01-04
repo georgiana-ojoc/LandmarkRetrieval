@@ -1,42 +1,40 @@
 .input-container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .input-container-content {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-    .input-info {
-        margin-left: 20px;
-    }
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+
+  .input-info {
+    margin-left: 20px;
+  }
 }
 
 .response-container {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    margin: 10px;
-}
-
-.prediction-card {
-    width: 30%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px;
 }
 
 .input-image {
-    width: 50%;
+  width: 50%;
 }
 
-.input-location {
-    font-size: 16px;
-    border-bottom: 1px solid black;
-    margin-bottom: 10px;
+.input_detections {
+  font-size: 16px;
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
 }
 
 .input-container-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }

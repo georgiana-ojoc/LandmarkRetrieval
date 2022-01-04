@@ -1,2 +1,4 @@
-__pycache__/*
-landmarkretrieval-7465959cdf7b.json
+.idea
+__pycache__
+models
+landmark_retrieval.json

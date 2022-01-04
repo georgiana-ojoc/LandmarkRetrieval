@@ -1,32 +1,36 @@
-<div class="input-container" *ngIf="predictedLandmarks">
-    <mat-card>
-        <mat-card-content>
-            <div class="input-container-content">
-                <img [src]="inputImage" class="input-image" alt="Input Image">
-                <div class="input-info">
-                    <p class="input-container-title">Target photo</p>
-                    <div *ngIf="showLocation && location" class="input-location">
-                        <p>The landmark present in your photo has been associated with the following names:</p>
-                        <p *ngFor="let landmarklocation of location.landmark; let l_i=index">{{landmarklocation[0]}}, score: {{(landmarklocation[1]| number : '1.2-2') || "-" }}%
-                        </p>
-                    </div>
-                    <p>Below you can find the best 3 predictions along with their probabilities.</p>
-                    <p>How pleased are you with the result? Rate the results from 0 to 10</p>
-                    <bar-rating [(rate)]="rate" [max]="10" [theme]="'square'"></bar-rating>
-                    <button mat-raised-button color="primary" (click)="onRatingAdd()" [disabled]="!canRate">Submit rating</button>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
+<div *ngIf="predictedLandmarks" class="input-container">
+  <mat-card>
+    <mat-card-content>
+      <div class="input-container-content">
+        <img [src]="inputImage" alt="Input Image" class="input-image">
+        <div class="input-info">
+          <p class="input-container-title">Target image</p>
+          <div *ngIf="showDetections && detections" class="input_detections">
+            <p>The landmark from your image has been detected as:</p>
+            <p *ngFor="let detection of detections">{{detection.name}},
+              score: {{(detection.score | number : '1.2-2') || "-" }}%,
+              location: {{detection.locations[0].latitude}} (latitude) - {{detection.locations[0].longitude}}
+              (longitude)
+            </p>
+          </div>
+          <p>Below you can find the best three predictions along with their probabilities.</p>
+          <p>How pleased are you with the result? Rate the results from 0 to 10.</p>
+          <bar-rating [(rate)]="rate" [max]="10" [theme]="'square'"></bar-rating>
+          <button (click)="onRatingAdd()" [disabled]="!canRate" color="primary" mat-raised-button>Submit rating</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
-<div class="response-container " *ngIf="predictedLandmarks " #prediction>
-    <mat-card *ngFor="let landmark of predictedLandmarks; let i=index " (click)="openDialog(i, landmark)" class="prediction-card">
-        <mat-card-title>
-            Prediction {{i+1}}
-        </mat-card-title>
-        <mat-card-subtitle>
-            With probability: {{landmark.probability}}%
-        </mat-card-subtitle>
-        <img mat-card-image src={{landmark.images[0]}} alt="Landmark prediction">
-    </mat-card>
+<div #prediction *ngIf="predictedLandmarks " class="response-container">
+  <mat-card (click)="openDialog(i, landmark)" *ngFor="let landmark of predictedLandmarks; let i=index "
+            class="prediction-card">
+    <mat-card-title>
+      Prediction {{i + 1}} ({{landmark.label}})
+    </mat-card-title>
+    <mat-card-subtitle>
+      Probability: {{landmark.probability}}%
+    </mat-card-subtitle>
+    <img alt="Landmark prediction" mat-card-image src={{landmark.images[0]}}>
+  </mat-card>
 </div>

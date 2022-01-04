@@ -13,14 +13,15 @@ class GeM(torch.nn.Module):
         super(GeM, self).__init__()
         self.eps = eps
         self.p = Parameter(torch.ones(1) * p)
+
     def forward(self, x):
-        return adaptive_avg_pool2d(x.clamp(min=self.eps).pow(self.p), (1, 1)).pow(1. / self.p)
+        return adaptive_avg_pool2d(x.clamp(min=self.eps).pow(self.p), (1, 1)).pow(1.0 / self.p)
 
 
 class Model(ABC):
-    def __init__(self):
+    def __init__(self, landmarks, model_path):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.model = self.load_model()
+        self.model = self.load_model(landmarks, model_path)
         self.model.eval()
         self.model = self.model.to(self.device)
         self.transformations = transforms.Compose([
@@ -31,7 +32,7 @@ class Model(ABC):
         ])
 
     @abstractmethod
-    def load_model(self):
+    def load_model(self, landmarks, model_path):
         pass
 
     def transform_image(self, image):
@@ -45,70 +46,49 @@ class Model(ABC):
 
 
 class ResNetIBNGeM(Model):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, landmarks, model_path):
+        super().__init__(landmarks, model_path)
 
-    def load_model(self):
+    def load_model(self, landmarks=491, model_path='models/resnet_ibn_gem.pt'):
         model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False)
         model.avgpool = GeM()
-        model.fc = torch.nn.Linear(model.fc.in_features, 491)
-        model.load_state_dict(torch.load('models/resnet_ibn_gen.pt'))
-        return model
-
-
-class ResNetIBNGeMTraining(Model):
-    def __init__(self):
-        super().__init__()
-
-    def load_model(self):
-        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False)
-        model.avgpool = GeM()
-        model.fc = torch.nn.Linear(model.fc.in_features, 13018)
-        model.load_state_dict(torch.load('models/resnet_training.pt'))
-        return model
-
-
-class ResNetIBNGeMVal(Model):
-    def __init__(self):
-        super().__init__()
-
-    def load_model(self):
-        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False)
-        model.avgpool = GeM()
-        model.fc = torch.nn.Linear(model.fc.in_features, 13018)
-        model.load_state_dict(torch.load('models/resnet_val.pt'))
+        model.fc = torch.nn.Linear(model.fc.in_features, landmarks)
+        model.load_state_dict(torch.load(model_path))
         return model
 
 
 class _EfficientNet(Model):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, landmarks, model_path):
+        super().__init__(landmarks, model_path)
 
-    def load_model(self):
-        model = EfficientNet.from_pretrained('efficientnet-b3')
-        model.load_state_dict(torch.load('models/efficientnet.pt', map_location=torch.device(self.device)))
+    def load_model(self, landmarks=1000, model_path='models/efficientnet.pt'):
+        model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=landmarks)
+        model.load_state_dict(torch.load(model_path, map_location=torch.device(self.device)))
         return model
 
 
 class Predictor:
     def __init__(self, model):
         if model == 'resnet-ibn-gem':
-            self.model = ResNetIBNGeM()
-            self.labels = json.load(open('labels.json'))
+            self.model = ResNetIBNGeM(landmarks=491, model_path='models/resnet_ibn_gem.pt')
         elif model == 'efficientnet':
-            self.model = _EfficientNet()
-            self.labels = json.load(open('labels.json'))
-        elif model == 'resnet-validation':
-            self.model = ResNetIBNGeMVal()
-            self.labels = json.load(open('labels_extended.json'))
-        elif model == 'resnet-training':
-            self.model = ResNetIBNGeMTraining()
-            self.labels = json.load(open('labels_extended.json'))
+            self.model = _EfficientNet(landmarks=1000, model_path='models/efficientnet.pt')
+        elif model == 'resnet-ibn-gem-training':
+            self.model = ResNetIBNGeM(landmarks=13018, model_path='models/resnet_ibn_gem_training.pt')
+        elif model == 'resnet-ibn-gem-validation':
+            self.model = ResNetIBNGeM(landmarks=13018, model_path='models/resnet_ibn_gem_validation.pt')
+        elif model == 'efficientnet-training':
+            self.model = _EfficientNet(landmarks=13018, model_path='models/efficientnet_training.pt')
+        elif model == 'efficientnet-validation':
+            self.model = _EfficientNet(landmarks=13018, model_path='models/efficientnet_validation.pt')
         else:
             self.model = None
             return
-
-        self.storage_url = 'https://landmark-retrieval.s3.eu-central-1.amazonaws.com'
+        if model in ('resnet-ibn-gem', 'efficientnet'):
+            self.labels = json.load(open('labels/labels.json'))
+        else:
+            self.labels = json.load(open('labels/labels_extended.json'))
+        self.storage_url = 'https://landmark-retrieval.s3.eu-central-1.amazonaws.com/100230'
 
     def predict(self, image):
         if self.model is None:
@@ -122,9 +102,9 @@ class Predictor:
         result = []
         for index in range(3):
             result += [{
+                'label': self.labels[indices[index]],
                 'images': [f'{self.storage_url}/{self.labels[indices[index]]}/{image}.jpg'
-                           for image in range(10) if indices[index].item() < len(self.labels)],
-                'probability': str(best_predictions[index]),
-                'label': self.labels[indices[index]] if indices[index].item() < len(self.labels) else None,
+                           for image in range(10)],
+                'probability': str(best_predictions[index])
             }]
         return result

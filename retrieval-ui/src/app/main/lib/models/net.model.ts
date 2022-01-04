@@ -1,4 +1,4 @@
-import { NetAccuracyModel } from "./net-accuracy.model";
+import {NetAccuracyModel} from "./net-accuracy.model";
 
 export class NetModel {
   name: string;

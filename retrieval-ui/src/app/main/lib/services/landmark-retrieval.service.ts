@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
-import { NetModel } from '../models/net.model';
-import { PredictionModel } from '../models/prediction.model';
+import {HttpClient, HttpErrorResponse, HttpEvent} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {catchError, Observable, throwError} from 'rxjs';
+import {NetModel} from '../models/net.model';
+import {PredictionModel} from '../models/prediction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +10,17 @@ import { PredictionModel } from '../models/prediction.model';
 export class LandmarkRetrievalService {
   private _retrievalApiUrl = 'http://127.0.0.1:5000/similar-images';
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient) {
+  }
 
-  retrieveSimilarLandmarks(file: File, model: NetModel) : Observable<HttpEvent<PredictionModel[]>> {
+  retrieveSimilarLandmarks(file: File, model: NetModel): Observable<HttpEvent<PredictionModel[]>> {
     const formData = new FormData();
     formData.append("file", file);
-    return this._httpClient.post<PredictionModel[]>(`${this._retrievalApiUrl}\\${model.value}`, formData,  {
+    return this._httpClient.post<PredictionModel[]>(`${this._retrievalApiUrl}\\${model.value}`, formData, {
       reportProgress: true,
       observe: 'events',
       responseType: 'json'
-  }).pipe(
+    }).pipe(
       catchError(this.handleError)
     );
   }

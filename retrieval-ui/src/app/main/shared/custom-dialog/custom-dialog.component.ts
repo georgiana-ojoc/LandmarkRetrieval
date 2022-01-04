@@ -1,6 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogInfo } from '../../lib/models/dialog-info';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {DialogInfo} from '../../lib/models/dialog-info';
 
 @Component({
   selector: 'app-custom-dialog',
@@ -10,7 +10,8 @@ import { DialogInfo } from '../../lib/models/dialog-info';
 export class CustomDialogComponent {
 
   constructor(public dialogRef: MatDialogRef<CustomDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogInfo) { }
+              @Inject(MAT_DIALOG_DATA) public data: DialogInfo) {
+  }
 
   closeDialog(): void {
     this.dialogRef.close();

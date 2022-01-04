@@ -1,6 +1,6 @@
-import { Component, Inject, Input } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PredictionModel } from '../../lib/models/prediction.model';
+import {Component, Inject, Input} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {PredictionModel} from '../../lib/models/prediction.model';
 
 @Component({
   selector: 'app-prediction-detail-dialog',
@@ -13,6 +13,7 @@ export class PredictionDetailDialogComponent {
   landmark: PredictionModel;
 
   constructor(public dialogRef: MatDialogRef<PredictionDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
 }

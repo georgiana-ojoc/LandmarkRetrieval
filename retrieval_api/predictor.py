@@ -49,7 +49,7 @@ class ResNetIBNGeM(Model):
         super().__init__()
 
     def load_model(self):
-        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False, force_reload=True)
+        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False)
         model.avgpool = GeM()
         model.fc = torch.nn.Linear(model.fc.in_features, 491)
         model.load_state_dict(torch.load('models/resnet_ibn_gen.pt'))
@@ -61,7 +61,7 @@ class ResNetIBNGeMTraining(Model):
         super().__init__()
 
     def load_model(self):
-        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False, force_reload=True)
+        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False)
         model.avgpool = GeM()
         model.fc = torch.nn.Linear(model.fc.in_features, 13018)
         model.load_state_dict(torch.load('models/resnet_training.pt'))
@@ -73,7 +73,7 @@ class ResNetIBNGeMVal(Model):
         super().__init__()
 
     def load_model(self):
-        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False, force_reload=True)
+        model = torch.hub.load('XingangPan/IBN-Net', 'resnet50_ibn_a', pretrained=False)
         model.avgpool = GeM()
         model.fc = torch.nn.Linear(model.fc.in_features, 13018)
         model.load_state_dict(torch.load('models/resnet_val.pt'))

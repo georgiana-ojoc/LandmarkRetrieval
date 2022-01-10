@@ -19,7 +19,7 @@
   flex-flow: row;
   justify-content: space-around;
   align-items: center;
-  margin: 20px;
+  margin-top: 20px;
 }
 
 .input-image {
@@ -37,4 +37,13 @@
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 15px;
+}
+
+.map-container {
+  margin: 20px;
+}
+
+google-map {
+  display: flex;
+  justify-content: center;
 }

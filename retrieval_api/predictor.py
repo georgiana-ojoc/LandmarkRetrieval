@@ -88,7 +88,7 @@ class Predictor:
             self.labels = json.load(open('labels/labels.json'))
         else:
             self.labels = json.load(open('labels/labels_extended.json'))
-        self.storage_url = 'https://landmark-retrieval.s3.eu-central-1.amazonaws.com/100230'
+        self.storage_url = 'https://landmark-retrieval.s3.eu-central-1.amazonaws.com'
 
     def predict(self, image):
         if self.model is None:

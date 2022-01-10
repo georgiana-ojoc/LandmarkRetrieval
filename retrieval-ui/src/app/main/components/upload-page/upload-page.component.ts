@@ -63,8 +63,8 @@ export class UploadPageComponent implements OnInit {
   previewFile: string;
   requestProgress: number;
   predictedLandmarks: PredictionModel[] = undefined;
-  detection: DetectionModel = undefined;
-
+  inputDetection: DetectionModel[] = undefined;
+  outputDetections: Map<string, DetectionModel[]> = new Map<string, DetectionModel[]>();
 
   constructor(
     private retrievalService: LandmarkRetrievalService,
@@ -81,7 +81,6 @@ export class UploadPageComponent implements OnInit {
   }
 
   onFileSelected(event) {
-
     this.file = event.target.files[0];
 
     if (this.file) {
@@ -123,7 +122,6 @@ export class UploadPageComponent implements OnInit {
     });
   }
 
-
   retrieveResults() {
     if (!this.fileName) {
       this.dialog.open(CustomDialogComponent, {
@@ -131,8 +129,7 @@ export class UploadPageComponent implements OnInit {
       });
     } else {
       this.retrieveSimilarLandmarks();
-
-      this.retrieveDetectedLandmark();
+      this.retrieveInputLandmark();
     }
   }
 
@@ -143,8 +140,8 @@ export class UploadPageComponent implements OnInit {
           this.requestProgress = Math.round((100 * event.loaded) / event.total);
         } else if (event instanceof HttpResponse) {
           this.requestProgress = null;
-          console.log(event.body);
           this.predictedLandmarks = event.body;
+          this.retrieveOutputLandmarks();
         }
       },
       error: (_: any) => {
@@ -154,19 +151,34 @@ export class UploadPageComponent implements OnInit {
     });
   }
 
-  retrieveDetectedLandmark() {
+  retrieveInputLandmark() {
     if (this.getDetection) {
       this.detectionService.retrieveDetectedLandmark(this.file).subscribe({
         next: (event: any) => {
           if (event instanceof HttpResponse) {
-            this.detection = event.body;
+            this.inputDetection = event.body;
           }
         },
         error: (_: any) => {
           console.log("Could not retrieve detected landmark for: " + this.fileName);
         }
-      })
+      });
     }
   }
 
+  retrieveOutputLandmarks() {
+    for (let predictedLandmark of this.predictedLandmarks) {
+      let image: string = predictedLandmark.images[0];
+      this.detectionService.retrieveDetectedLandmark(image).subscribe({
+        next: (event: any) => {
+          if (event instanceof HttpResponse) {
+            this.outputDetections.set(image, event.body);
+          }
+        },
+        error: (_: any) => {
+          console.log("Could not retrieve detected landmark for: " + this.fileName);
+        }
+      });
+    }
+  }
 }

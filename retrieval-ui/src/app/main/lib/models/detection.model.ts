@@ -1,3 +1,7 @@
+import {LocationModel} from "./location.model";
+
 export class DetectionModel {
-  landmark: any[];
+  locations: LocationModel[];
+  name: string;
+  score: number;
 }

@@ -55,7 +55,7 @@
     </mat-card-content>
   </mat-card>
 </div>
-<app-prediction-section (ratingAdded)=" addRating($event) " [detections]="detection"
-                        [inputImage]="previewFile" [predictedLandmarks]="predictedLandmarks"
-                        [showDetections]="getDetection">
+<app-prediction-section (ratingAdded)="addRating($event)" [inputDetection]="inputDetection"
+                        [inputImage]="previewFile" [outputDetections]="outputDetections"
+                        [predictedLandmarks]="predictedLandmarks" [showDetections]="getDetection">
 </app-prediction-section>

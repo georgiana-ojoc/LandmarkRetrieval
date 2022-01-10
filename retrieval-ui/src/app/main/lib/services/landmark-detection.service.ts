@@ -2,6 +2,7 @@ import {HttpClient, HttpErrorResponse, HttpEvent} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {catchError, Observable, throwError} from 'rxjs';
 import {DetectionModel} from '../models/detection.model';
+import {RemoteFileModel} from "../models/remote-file.model";
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +14,7 @@ export class LandmarkDetectionService {
   constructor(private _httpClient: HttpClient) {
   }
 
-  retrieveDetectedLandmark(file: File): Observable<HttpEvent<DetectionModel>> {
-    const formData = new FormData();
-    formData.append("file", file);
-    return this._httpClient.post<DetectionModel>(`${this._apiUrl}`, formData, {
-      reportProgress: true,
-      observe: 'events',
-      responseType: 'json'
-    }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-
-  private handleError(err: HttpErrorResponse): Observable<never> {
+  private static handleError(err: HttpErrorResponse): Observable<never> {
     let errorMessage = '';
     if (err.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -39,4 +27,20 @@ export class LandmarkDetectionService {
     return throwError(errorMessage);
   }
 
+  retrieveDetectedLandmark(file: File | string): Observable<HttpEvent<DetectionModel[]>> {
+    let request;
+    if (file instanceof File) {
+      request = new FormData();
+      request.append("file", file);
+    } else {
+      request = new RemoteFileModel(file);
+    }
+    return this._httpClient.post<DetectionModel[]>(`${this._apiUrl}`, request, {
+      reportProgress: true,
+      observe: 'events',
+      responseType: 'json'
+    }).pipe(
+      catchError(LandmarkDetectionService.handleError)
+    );
+  }
 }
